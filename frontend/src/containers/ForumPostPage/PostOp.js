@@ -1,24 +1,21 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCommentDots, faCaretUp, faCaretDown, faTrashCan, faPenToSquare, faEllipsisVertical, faFlag, faBan, faThumbTack} from '@fortawesome/free-solid-svg-icons';
+import { faCommentDots, faCaretUp, faCaretDown, faEllipsisVertical} from '@fortawesome/free-solid-svg-icons';
 import '../../assets/ForumApp.css';
-import {useNavigate } from 'react-router-dom';
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { deletePosts, dislikePosts, likePosts, reset, editPost, pinPost, unpinPost} from '../../features/posts/postSlice';
-import { banUser} from '../../features/auth/authSlice';
+import { dislikePosts, likePosts, reset, editPost} from '../../features/posts/postSlice';
 import { toast } from 'react-toastify';
 import LoadingIcons from 'react-loading-icons';
+import PostOptions from './PostOptions';
 
 
 function PostOp(props) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
-  const { currentPost, isVotesLoading } = useSelector((state) => state.posts);
+  const { currentPost, isVotesLoading} = useSelector((state) => state.posts);
   const [changeContent, setChangeContent] = useState(`${currentPost.content}`)
   const [clicked, setClicked] = useState(false)
   const [showPostOptions, setShowPostOptions] = useState(false)
-  const [pinned, setPinned] = useState(currentPost.pinned)
   const ref = useRef();
 
   useEffect(() => {
@@ -54,9 +51,7 @@ function PostOp(props) {
           dispatch(reset());
       });
   }
-  const deleteUserPosts = (id) => {
-      dispatch(deletePosts(id)).then(()=> dispatch(reset())).then(navigate('/forum'))
-  }
+ 
 
   const editContent = (content) => {
     if (content) {
@@ -70,25 +65,6 @@ function PostOp(props) {
   const changeContentText = (e) => {
       setChangeContent(e.target.value)
   }
-
-  const banThreadUser = (id) => {
-    dispatch(banUser(id))
-    navigate('/forum')
-  }
-
-  const decidePin = (bool) => {
-    if (!bool) {
-        dispatch(pinPost(currentPost._id)).then(() => {
-            dispatch(reset());
-        });
-        setPinned(!bool)
-    } else {
-        dispatch(unpinPost(currentPost._id)).then(() => {
-            dispatch(reset());
-        });
-        setPinned(!bool)
-    }
-}
 
   return (
     <div className="PostOp">
@@ -108,44 +84,7 @@ function PostOp(props) {
               {
                 showPostOptions 
                 ? <div className='post-options-container' >
-                    {
-                      !user ? <span onClick={() => navigate('/report')}>
-                                            <FontAwesomeIcon className="reportIcon" icon={faFlag} />
-                                            Report
-                                          </span> : 
-                      user.name === props.author
-                      ? <>
-                          <span onClick = {() => deleteUserPosts(currentPost._id)}>
-                            <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} />
-                            Delete
-                          </span>
-                          
-                          <span onClick = {() => setClicked(!clicked)}>
-                        
-                            <FontAwesomeIcon className="editIcon" icon={faPenToSquare}  />
-                            Edit
-                          </span>
-                        </>
-                      : user.moderator ?  <><span onClick={() => banThreadUser(props.id)}>
-                                            <FontAwesomeIcon className="banIcon" icon={faBan} />
-                                            Ban
-                                          </span>
-                                            {pinned ? <span onClick={() => decidePin(pinned)}>
-                                            <FontAwesomeIcon className="pinIcon" icon={faThumbTack} />
-                                            Unpin
-                                          </span> : <span onClick={() => decidePin(pinned)}>
-                                            <FontAwesomeIcon className="pinIcon" icon={faThumbTack} />
-                                            Pin
-                                          </span>}
-                                          <span onClick = {() => deleteUserPosts(currentPost._id)}>
-                                            <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} />
-                                            Delete
-                                         </span></>
-                                        : <span onClick={() => navigate('/report')}>
-                                            <FontAwesomeIcon className="reportIcon" icon={faFlag} />
-                                            Report
-                                          </span>
-                    }
+                    <PostOptions isClicked = {clicked} setIsClicked = {setClicked} author = {props.author} userId = {props.id} referPost = {true} referComment = {false} referReply = {false}/>
                   </div> 
                 : <></>
               }
@@ -155,7 +94,7 @@ function PostOp(props) {
           <h3>{props.title}</h3>
           <div>
             {
-              !clicked 
+              !clicked
               ? props.content 
               : <div className='edit-container'>
                   <textarea 

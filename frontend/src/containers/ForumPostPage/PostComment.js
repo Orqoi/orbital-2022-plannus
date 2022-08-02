@@ -20,7 +20,7 @@ function PostComment(props) {
       // close comment window after submit, if it is a reply
       if (props.updateCommenting && props.reply) {
         const replyData = {
-          replyText: "@" + props.commentAuthor.name + " " + commentText,
+          replyText: "@" + props.commentAuthor + " " + commentText,
           commentId: props.commentId,
         }
         
@@ -45,7 +45,7 @@ function PostComment(props) {
     <form className="PostComment">
       {user
       ? <>
-          <h6>{props.reply ? 'Replying to ' + props.commentAuthor.name : 'Commenting'} as {user.name}</h6>
+          <h6>{props.reply ? 'Replying to ' + props.commentAuthor : 'Commenting'} as {user.name}</h6>
           <textarea id='text' onChange={onChange} cols="30" rows="5" placeholder='What are your thoughts?'></textarea>
           <input onClick={onClickAddComment} value={props.reply ? 'Post Reply' : 'Post Comment'} required type="submit" />
         </>

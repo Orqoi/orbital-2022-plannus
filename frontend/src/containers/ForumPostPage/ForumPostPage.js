@@ -30,7 +30,7 @@ function ForumPostPage(props) {
             <PostComment reply={false} />
             {currentPost.comments.slice(0, commentsDisplayedCount).map((comment) => 
               <PostNew key={comment._id} commentId={comment._id} replies={comment.replies} likes={comment.likes} 
-              dislikes={comment.dislikes} profileImage={comment.author.profileImage} content={comment.content} author={comment.author} time={<Moment fromNow>{comment.createdAt}</Moment>}/>)
+              dislikes={comment.dislikes} profileImage={comment.author.profileImage} content={comment.content} author={comment.author.name} time={<Moment fromNow>{comment.createdAt}</Moment>}/>)
             }
             {
               commentsDisplayedCount >= currentPost.comments.length

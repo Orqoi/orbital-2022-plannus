@@ -394,6 +394,7 @@ export const unpinPost = createAsyncThunk(
 )
 
 
+
 export const postSlice = createSlice({
   name: 'posts',
   initialState,
@@ -406,6 +407,7 @@ export const postSlice = createSlice({
       state.isCommentsLoading = false
       state.isRepliesLoading = false
       state.message = ''
+      state.clicked = false
     },
     updateSort: (state) => {
       if (state.sortBy === 'Likes') {

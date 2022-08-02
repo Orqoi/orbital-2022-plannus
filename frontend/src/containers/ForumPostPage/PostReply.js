@@ -1,25 +1,22 @@
 import '../../assets/ForumApp.css';
-import { faThumbsUp, faThumbsDown, faTrashCan, faPenToSquare, faEllipsis, faFlag, faBan} from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp, faThumbsDown, faEllipsis} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import '../../assets/ForumApp.css';
 import { useState, useRef, useEffect } from "react";
 import PostComment from './PostComment';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { dislikeReply, likeReply, reset, deleteReply, editReply} from '../../features/posts/postSlice';
-import { banUser, reset as resetUser } from '../../features/auth/authSlice';
+import { dislikeReply, likeReply, reset, editReply} from '../../features/posts/postSlice';
 import LoadingIcons from 'react-loading-icons';
-import { useNavigate } from 'react-router-dom';
+import PostOptions from './PostOptions';
 
 function PostReply(props) {
-
-    const navigate = useNavigate();
     const dispatch = useDispatch();
     const [showPostOptions, setShowPostOptions] = useState(false)
     const [commenting, setCommenting] = useState(false);
     const updateCommenting = () => setCommenting(!commenting);
     const { user } = useSelector((state) => state.auth)
-    const { isRepliesLoading } = useSelector((state) => state.posts)
+    const { isRepliesLoading} = useSelector((state) => state.posts)
     const content = props.content
     const index = content.indexOf(" ")
     const contentReply = content.slice(index + 1)
@@ -61,11 +58,6 @@ function PostReply(props) {
       });
   
     }
-
-    const deleteUserReply = (postData) => {
-      dispatch(deleteReply(postData)).then(()=> dispatch(reset()))
-    }
-    
   
     const editUserReply = (content, rId, cId) => {
       if (content) {
@@ -79,9 +71,6 @@ function PostReply(props) {
         setChangeContent(e.target.value)
     }
 
-    const banReplyUser = (id) => {
-      dispatch(banUser(id)).then(()=>dispatch(resetUser()))
-    }
 
     return (
         <div className="PostReply PostNew">
@@ -89,7 +78,7 @@ function PostReply(props) {
             <div className='PostNewIcon'>
               <img className='OpIcon' src={props.profileImage ? props.profileImage : 'https://res.cloudinary.com/dqreeripf/image/upload/v1656242180/xdqcnyg5zu0y9iijznvf.jpg'} alt='user profile' />
             </div>
-            <h5 className='PostNewAuthor'>{props.author.name}</h5>
+            <h5 className='PostNewAuthor'>{props.author}</h5>
             <h5 className='PostNewTime'>{props.time}</h5>
             
           </div>
@@ -141,36 +130,7 @@ function PostReply(props) {
               {
                 showPostOptions 
                 ? <div className='post-options-container' >
-                    { !user ? <span onClick={() => navigate('/report')}>
-                                          <FontAwesomeIcon className="reportIcon" icon={faFlag} />
-                                          Report
-                                         </span>: 
-                      user.name === props.author.name 
-                      ? <>
-                          <span onClick={()=>deleteUserReply({replyId: props.replyId, commentId: props.commentId})}>
-                            <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} />
-                            Delete
-                          </span>
-                          
-                          <span onClick = {() => setClicked(!clicked)}>
-                        
-                            <FontAwesomeIcon className="editIcon" icon={faPenToSquare}  />
-                            Edit
-                          </span>
-                        </>
-                      : user.moderator ? <><span onClick={() => banReplyUser(props.author._id)}>
-                                          <FontAwesomeIcon className="banIcon" icon={faBan} />
-                                          Ban
-                                         </span>
-                                         <span onClick={()=>deleteUserReply({replyId: props.replyId, commentId: props.commentId})}>
-                                          <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} />
-                                          Delete
-                                        </span> </>
-                                       : <span onClick={() => navigate('/report')}>
-                                          <FontAwesomeIcon className="reportIcon" icon={faFlag} />
-                                          Report
-                                         </span>
-                    }
+                    <PostOptions isClicked = {clicked} setIsClicked = {setClicked} author = {props.author }replyMaker = {props.author._id} commentId = {props.commentId} replyId = {props.replyId} referPost = {false} referComment = {false} referReply = {true}/>
                   </div> 
                 : <></>
               }

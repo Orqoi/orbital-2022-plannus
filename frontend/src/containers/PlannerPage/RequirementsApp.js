@@ -1,26 +1,20 @@
 import '../../assets/PlannerApp.css';
 import { useSelector} from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { checkGraduation, setSelectedIndex, reset } from '../../features/modules/moduleSlice';
 import { useState } from 'react';
+import CourseDropdown from './CourseDropdown';
 
 
 
 
-function RequirementsApp(props) {
+function RequirementsApp({setRequirementsActive, requirementsActive}) {
 
     const {selectedRequirementIndex, requirements } = useSelector(state => state.modules)
     const {planner} = useSelector(state => state.auth.user)
-    const dispatch = useDispatch();
     const [showUnfulfilled, setShowUnfulfilled] = useState(true);
     let modulesTaken = []
     planner.forEach(semester => {
         modulesTaken = modulesTaken.concat(semester.modules)
     })
-
-    const changeEv = (e) => {
-        dispatch(setSelectedIndex(e.currentTarget.value)).then(() => dispatch(checkGraduation())).then(()=> dispatch(reset()))
-    }
 
     const moduleFulfilled = (modulesTaken, criteriaModule) => {
         function satisfies(moduleString, module) {
@@ -29,42 +23,12 @@ function RequirementsApp(props) {
         return modulesTaken.filter(module => satisfies(criteriaModule.moduleCode, module.moduleCode)).length > 0
     }
 
-    console.log(requirements)
   return (
     <div className='RequirementsApp'>
         
         <div className='PlannerHeader RequirementsHeader'>
             <div className='selected-course-container'>
-                <select defaultValue={selectedRequirementIndex} name="courses" id="courses" onChange={e => changeEv(e)}>
-                    <optgroup label="Single Major Programmes">
-                        {
-                            requirements.map((courseData, idx) => 
-                                courseData.degreeType === "SingleMajor"
-                                ?   <option 
-                                        selected={idx === selectedRequirementIndex ? true : false} 
-                                        key={courseData.title} 
-                                        value={idx}>
-                                    {courseData.title}
-                                    </option>
-                                : <></>
-                            )
-                        }
-                    </optgroup>
-                    <optgroup label="Double Major Programmes">
-                        {
-                            requirements.map((courseData, idx) => 
-                                courseData.degreeType === "DoubleMajor"
-                                ?   <option 
-                                        selected={idx === selectedRequirementIndex ? true : false} 
-                                        key={courseData.title} 
-                                        value={idx}>
-                                    {courseData.title}
-                                    </option>
-                                : <></>
-                            )
-                        }
-                    </optgroup>
-                </select>
+                <CourseDropdown />
             </div>
             <div className='toggle-btn'>
                 <h3>Toggle Unfulfilled Requirements</h3>
@@ -124,7 +88,7 @@ function RequirementsApp(props) {
         <div className='RequirementsFooter'>
             <h3><div className='planner-footer-btn' onClick={(e) => {
                     e.preventDefault();
-                    props.setRequirementsActive(!props.requirementsActive);
+                    setRequirementsActive(!requirementsActive);
                 }}>Back to Planner</div></h3>
         </div>
     </div>

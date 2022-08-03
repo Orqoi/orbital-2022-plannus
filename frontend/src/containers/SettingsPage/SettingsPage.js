@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import {getUserPosts, reset} from "../../features/posts/postSlice";
 import { updateUserDetails, updateUserImage, reset as resetUser }from "../../features/auth/authSlice";
 
-function SettingsPage(props) {
+function SettingsPage({darkMode, toggleDarkMode}) {
     const { user, isSuccess, isError, message } = useSelector((state) => state.auth);
     const { userPosts } = useSelector((state) => state.posts);
     const { requirements } = useSelector(state => state.modules)
@@ -276,7 +276,7 @@ function SettingsPage(props) {
                         Dark mode turns the light surfaces of the page dark, creating an experience ideal for the dark. Try it out!
                     </p>
                     <label className="switch">
-                        <input type="checkbox" checked={props.darkMode} onChange={props.toggleDarkMode}/>
+                        <input type="checkbox" checked={darkMode} onChange={toggleDarkMode}/>
                         <span className="slider round"></span>
                     </label>
                 </div>

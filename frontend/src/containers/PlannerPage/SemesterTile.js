@@ -9,7 +9,7 @@ import { shiftModule, checkGraduation, deleteSemester, saveSemester, reset } fro
 import { updateUserPlanner, reset as resetUser } from '../../features/auth/authSlice';
 import { useDrop } from 'react-dnd';
 
-function SemesterTile(props) {
+function SemesterTile({semesterId, title, darkMode, modules}) {
 
   
 
@@ -23,11 +23,11 @@ function SemesterTile(props) {
 
   const onDrop = (item) => {
     
-    if (props.semesterId !== item.semesterId) {
+    if (semesterId !== item.semesterId) {
       const shiftModuleData = {
         module: item.module,
         previousSemesterId: item.semesterId,
-        currentSemesterId: props.semesterId
+        currentSemesterId: semesterId
       }
 
       dispatch(shiftModule(shiftModuleData))
@@ -45,13 +45,13 @@ function SemesterTile(props) {
   }
 
   const deleteSemesterOnClick = () => {
-    dispatch(deleteSemester(props.semesterId)).then(() => dispatch(updateUserPlanner())).then(() => dispatch(checkGraduation())).then(()=> dispatch(topLevelAction()))
+    dispatch(deleteSemester(semesterId)).then(() => dispatch(updateUserPlanner())).then(() => dispatch(checkGraduation())).then(()=> dispatch(topLevelAction()))
   }
 
   const saveSemesters = (e) => {
-    if (e.target.innerText !== props.title) {
+    if (e.target.innerText !== title) {
       const saveData = {
-        semesterId: props.semesterId,
+        semesterId: semesterId,
         content: e.target.innerText
       }
       
@@ -65,11 +65,11 @@ function SemesterTile(props) {
 
   return (
     <div className="SemesterTile">
-      {searching ? <SearchOverlay semesterId={props.semesterId}
-      semesterTitle={props.title} searching={searching} setSearching={setSearching} /> : <></>}
+      {searching ? <SearchOverlay semesterId={semesterId}
+      semesterTitle={title} searching={searching} setSearching={setSearching} /> : <></>}
       <div className='SemesterTileHeader'>
-        <h4 onBlur={saveSemesters} contentEditable={true} suppressContentEditableWarning={true}>{props.title}</h4>
-        <h5>{props.modules.reduce((prev, curr) => prev + curr.moduleCredit, 0)} MC</h5>
+        <h4 onBlur={saveSemesters} contentEditable={true} suppressContentEditableWarning={true}>{title}</h4>
+        <h5>{modules.reduce((prev, curr) => prev + curr.moduleCredit, 0)} MC</h5>
         <div className='delete-container' onClick={deleteSemesterOnClick}>
           <h5>Delete Semester</h5>
         </div>
@@ -77,7 +77,7 @@ function SemesterTile(props) {
       </div>
       <div className='SemesterTileBody' ref={drop} style={{backgroundColor: isOver ? "darkgrey" : "initial"}}>
          
-        {props.modules.map((module, idx) => <ModuleTile idx={idx} darkMode={props.darkMode} key={module.moduleCode} semesterId={props.semesterId} module={module}/>)}
+        {modules.map((module, idx) => <ModuleTile idx={idx} darkMode={darkMode} key={module.moduleCode} semesterId={semesterId} module={module}/>)}
 
         
         

@@ -6,12 +6,12 @@ import {getPosts, reset, sortByLikes, sortByComments, sortByTime }from "../../fe
 import {reset as resetUser} from "../../features/auth/authSlice"
 import React, { useEffect }  from 'react';
 import Moment from 'react-moment';
-import Spinner from '../../components/Spinner';
+import LoadingIcons from 'react-loading-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFaceSmileBeam, faFire, faImage, faSprayCanSparkles } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
 
-function ForumMainPage(props) {
+function ForumMainPage({posts}) {
   
   const navigate = useNavigate()
   const dispatch = useDispatch();
@@ -25,7 +25,7 @@ function ForumMainPage(props) {
       if (((window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 10)) && hasMorePosts) {
         const updatedBySorter = false;
         dispatch(getPosts({
-          postLength: props.posts.length,
+          postLength: posts.length,
           updatedBySorter: updatedBySorter
         })).then(() => dispatch(reset()))
      }
@@ -55,7 +55,7 @@ function ForumMainPage(props) {
     const updatedBySorter = true;
     dispatch(sortByLikes())
     dispatch(getPosts({
-      postLength: props.posts.length,
+      postLength: posts.length,
       updatedBySorter: updatedBySorter
     })).then(() => dispatch(reset()))
   }
@@ -64,7 +64,7 @@ function ForumMainPage(props) {
     const updatedBySorter = true;
     dispatch(sortByComments())
     dispatch(getPosts({
-      postLength: props.posts.length,
+      postLength: posts.length,
       updatedBySorter: updatedBySorter
     })).then(() => dispatch(reset()))
   }
@@ -73,7 +73,7 @@ function ForumMainPage(props) {
     const updatedBySorter = true;
     dispatch(sortByTime())
     dispatch(getPosts({
-      postLength: props.posts.length,
+      postLength: posts.length,
       updatedBySorter: updatedBySorter
     })).then(() => dispatch(reset()))
   }
@@ -117,9 +117,9 @@ function ForumMainPage(props) {
         
       </div>
       <div className="ForumPostContainer">
-        {props.posts.map((post, idx) => <ForumPost key={post._id} title={post.title} likes={post.likes} comments={post.comments}
+        {posts.map((post, idx) => <ForumPost key={post._id} title={post.title} likes={post.likes} comments={post.comments}
         dislikes={post.dislikes} pinned={post.pinned} content={post.content} author={post.user.name} time={<Moment fromNow>{post.createdAt}</Moment>} id={post._id}/>)}
-        {isLoading ? <Spinner /> : <></>}
+        {isLoading ? <LoadingIcons.ThreeDots fill="#000000" /> : <></>}
         {!hasMorePosts ? <h1 style={{"marginBottom": "1.5rem"}}>No more posts to display</h1> : <></>}
       </div>
       

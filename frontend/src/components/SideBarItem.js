@@ -3,17 +3,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { NavLink } from 'react-router-dom';
 
 
-function SideBarItem(props) {
+function SideBarItem({iconName, content, link}) {
     return (
-      props.link === '/nusmods'
+      link === '/nusmods'
       ? <a href='https://nusmods.com' rel="noreferrer" target="_blank" className='SideBarItem'>
-          <FontAwesomeIcon className="SideBarIcon" icon={props.iconName} />
-          <p className='SideBarText'>{props.content}</p>
+          <FontAwesomeIcon className="SideBarIcon" icon={iconName} />
+          <p className='SideBarText'>{content}</p>
         </a>
         
-      : <NavLink to={props.link} className="SideBarItem">
-          <FontAwesomeIcon className="SideBarIcon" icon={props.iconName} />
-          <p className='SideBarText'>{props.content}</p>
+      : <NavLink to={link} className="SideBarItem">
+          <FontAwesomeIcon className="SideBarIcon" icon={iconName} />
+          <p className='SideBarText'>{content}</p>
         </NavLink>
     );
   }

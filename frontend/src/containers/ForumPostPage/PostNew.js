@@ -11,7 +11,7 @@ import LoadingIcons from 'react-loading-icons';
 import Moment from 'react-moment';
 import PostOptions from './PostOptions';
 
-function PostNew(props) {
+function PostNew({commentId, content, profileImage, author, time, replies, likes, dislikes}) {
   const [commenting, setCommenting] = useState(false);
   const updateCommenting = () => setCommenting(!commenting);
   
@@ -21,7 +21,7 @@ function PostNew(props) {
   const { isCommentsLoading} = useSelector((state) => state.posts)
   const [repliesDisplayedCount, setRepliesDisplayedCount] = useState(5)
   const [clicked, setClicked] = useState(false)
-  const [changeContent, setChangeContent] = useState(props.content)
+  const [changeContent, setChangeContent] = useState(content)
   const ref = useRef();
 
   useEffect(() => {
@@ -41,7 +41,7 @@ function PostNew(props) {
     if (!user.verified) {
       toast.error("You have not verified your email.");
   }
-    dispatch(likeComment(props.commentId)).then(() => {
+    dispatch(likeComment(commentId)).then(() => {
         dispatch(reset());
     });
   }
@@ -54,7 +54,7 @@ function PostNew(props) {
     if (!user.verified) {
       toast.error("You have not verified your email.");
   }
-    dispatch(dislikeComment(props.commentId)).then(() => {
+    dispatch(dislikeComment(commentId)).then(() => {
         dispatch(reset());
     });
   }
@@ -74,16 +74,16 @@ function PostNew(props) {
     <div className="PostNew">
       <div className='PostNewHeader'>
         <div className='PostNewIcon'>
-          <img className='OpIcon' src={props.profileImage ? props.profileImage : 'https://res.cloudinary.com/dqreeripf/image/upload/v1656242180/xdqcnyg5zu0y9iijznvf.jpg'} alt='user profile' />
+          <img className='OpIcon' src={profileImage ? profileImage : 'https://res.cloudinary.com/dqreeripf/image/upload/v1656242180/xdqcnyg5zu0y9iijznvf.jpg'} alt='user profile' />
         </div>
-        <h5 className='PostNewAuthor'>{props.author}</h5>
-        <h5 className='PostNewTime'>{props.time} ({props.replies.length} replies)</h5>
+        <h5 className='PostNewAuthor'>{author}</h5>
+        <h5 className='PostNewTime'>{time} ({replies.length} replies)</h5>
       </div>
       <div className='PostNewContent'>
         <div>
           {
             !clicked 
-            ? props.content 
+            ? content 
             : <div className='edit-container'>
                 <textarea 
                   autoFocus 
@@ -94,7 +94,7 @@ function PostNew(props) {
                   
                 </textarea>
                 <div className='edit-btn-container'>
-                  <input onClick={() => editUserComment(changeContent, props.commentId)} value='Save' required type="submit" />
+                  <input onClick={() => editUserComment(changeContent, commentId)} value='Save' required type="submit" />
                   <input onClick={() => setClicked(!clicked)} value='Cancel' required type="button" />
                 </div>
                 
@@ -109,11 +109,11 @@ function PostNew(props) {
           ? <LoadingIcons.ThreeDots height="0.5rem" width="4.9rem" fill="#000000" />
           : <>
               <FontAwesomeIcon icon={faThumbsUp} className="PostNewVoteIcon" id='LikeButton' 
-                style={user && props.likes.includes(user._id) ? {color:'var(--color-accepted)'} : {color:'inherit'}} onClick={onLike}/>
-              <h5 className='PostNewVoteIcon'>{props.likes.length}</h5>
+                style={user && likes.includes(user._id) ? {color:'var(--color-accepted)'} : {color:'inherit'}} onClick={onLike}/>
+              <h5 className='PostNewVoteIcon'>{likes.length}</h5>
               <FontAwesomeIcon icon={faThumbsDown} className="PostNewVoteIcon" id='DislikeButton' 
-                style={user && props.dislikes.includes(user._id) ? {color:'var(--color-remove)'} : {color:'inherit'}} onClick={onDislike}/>
-              <h5 className='PostNewVoteIcon'>{props.dislikes.length}</h5>
+                style={user && dislikes.includes(user._id) ? {color:'var(--color-remove)'} : {color:'inherit'}} onClick={onDislike}/>
+              <h5 className='PostNewVoteIcon'>{dislikes.length}</h5>
             </>
         }
         
@@ -128,21 +128,21 @@ function PostNew(props) {
             {
               showPostOptions 
               ? <div className='post-options-container'>
-                  <PostOptions isClicked = {clicked} setIsClicked = {setClicked} author = {props.author} commentId = {props.commentId} commentMaker = {props.author._id} referPost = {false} referComment = {true} referReply = {false}/>
+                  <PostOptions isClicked = {clicked} setIsClicked = {setClicked} author = {author} commentId = {commentId} commentMaker = {author._id} referPost = {false} referComment = {true} referReply = {false}/>
                 </div> 
               : <></>
             }
         </div>
       </div>
-      {commenting ? <PostComment commentId={props.commentId} commentAuthor={props.author} updateCommenting={updateCommenting} reply={true}/> : <></>}
+      {commenting ? <PostComment commentId={commentId} commentAuthor={author} updateCommenting={updateCommenting} reply={true}/> : <></>}
       <div className='PostNewRepliesContainer'>
-        {props.replies.slice(0, repliesDisplayedCount).map((reply) => 
-          <PostReply key={reply._id} commentId={props.commentId} commentAuthor={props.author} replyId={reply._id} likes={reply.likes} dislikes={reply.dislikes}
+        {replies.slice(0, repliesDisplayedCount).map((reply) => 
+          <PostReply key={reply._id} commentId={commentId} commentAuthor={author} replyId={reply._id} likes={reply.likes} dislikes={reply.dislikes}
           content={reply.content} profileImage={reply.author.profileImage} author={reply.author.name} time={<Moment fromNow>{reply.createdAt}</Moment>}/>)}
         {
-              repliesDisplayedCount >= props.replies.length
+              repliesDisplayedCount >= replies.length
               ? <></>
-              : <h4 className='show-more-btn' onClick={() => repliesDisplayedCount + 5 > props.replies.length ? setRepliesDisplayedCount(props.replies.length) : setRepliesDisplayedCount(repliesDisplayedCount + 5)}>
+              : <h4 className='show-more-btn' onClick={() => repliesDisplayedCount + 5 > replies.length ? setRepliesDisplayedCount(replies.length) : setRepliesDisplayedCount(repliesDisplayedCount + 5)}>
                   Show more replies
                 </h4>
             }

@@ -2,9 +2,9 @@ import {useState, useEffect} from 'react'
 import {useSelector, useDispatch} from 'react-redux'
 import {toast} from 'react-toastify'
 import {register, reset} from "../features/auth/authSlice"
-import Spinner from '../components/Spinner'
 import '../assets/Login.css';
 import successLogo from '../assets/Success.png'
+import LoadingIcons from 'react-loading-icons';
 
 function RegisterPage() {
 
@@ -54,7 +54,7 @@ function RegisterPage() {
   }
 
   if(isLoading) {
-      return <Spinner />
+      return <LoadingIcons.ThreeDots fill="#000000" />
   }
 
   return (

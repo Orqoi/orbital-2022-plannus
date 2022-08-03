@@ -8,16 +8,16 @@ import { useDrag } from 'react-dnd';
 import { useEffect } from 'react';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 
-function ModuleTile(props) {
+function ModuleTile({module, semesterId, idx, darkMode}) {
   
   const dispatch = useDispatch()
   const [{isDragging}, drag, preview] = useDrag(() => ({
     type: "module",
     item: {
-      module: props.module,
-      semesterId: props.semesterId,
-      idx: props.idx,
-      darkMode: props.darkMode,
+      module: module,
+      semesterId: semesterId,
+      idx: idx,
+      darkMode: darkMode,
     },
     collect: monitor => ({
       isDragging: !!monitor.isDragging(),
@@ -34,19 +34,19 @@ function ModuleTile(props) {
 
   const deleteModuleOnClick = () => {
     const deleteModuleData = {
-      module : props.module,
-      semesterId : props.semesterId
+      module : module,
+      semesterId : semesterId
     }
     dispatch(deleteModule(deleteModuleData)).then(()=> dispatch(updateUserPlanner())).then(() => dispatch(checkGraduation())).then(()=> dispatch(topLevelAction))
   }
 
   return (
-    <div ref={drag} className="ModuleTile" style={{backgroundColor: props.module.color, display: isDragging ? 'none' : 'initial'}}>
+    <div ref={drag} className="ModuleTile" style={{backgroundColor: module.color, display: isDragging ? 'none' : 'initial'}}>
        <div className='tile-close-container'>
            <FontAwesomeIcon icon={faXmark} className="tile-close-button" onClick={deleteModuleOnClick}  />
        </div>
-       <h5>{props.module.moduleCode}</h5>
-       <h5>{props.module.moduleCredit} MC</h5>
+       <h5>{module.moduleCode}</h5>
+       <h5>{module.moduleCredit} MC</h5>
     </div>
   );
 }

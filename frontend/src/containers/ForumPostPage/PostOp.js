@@ -9,7 +9,7 @@ import LoadingIcons from 'react-loading-icons';
 import PostOptions from './PostOptions';
 
 
-function PostOp(props) {
+function PostOp({profileImage, author, likes, dislikes, time, id, title, content, images, comments}) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { currentPost, isVotesLoading} = useSelector((state) => state.posts);
@@ -69,14 +69,14 @@ function PostOp(props) {
   return (
     <div className="PostOp">
         <div className='VoteButtons'>
-          <FontAwesomeIcon role="button" icon={faCaretUp} onClick={onLike} className="UpvoteBtn" style={user && props.likes.includes(user._id) ? {color:'var(--color-accept)'} : {color:'inherit'}} />
-          {isVotesLoading ? <LoadingIcons.ThreeDots width="2rem" fill="#000000" /> : <h3>{props.likes.length - props.dislikes.length}</h3>}
-          <FontAwesomeIcon role="button" icon={faCaretDown} onClick={onDislike} className="DownvoteBtn" style={user && props.dislikes.includes(user._id) ? {color:'var(--color-remove)'} : {color:'inherit'}} />
+          <FontAwesomeIcon role="button" icon={faCaretUp} onClick={onLike} className="UpvoteBtn" style={user && likes.includes(user._id) ? {color:'var(--color-accept)'} : {color:'inherit'}} />
+          {isVotesLoading ? <LoadingIcons.ThreeDots width="2rem" fill="#000000" /> : <h3>{likes.length - dislikes.length}</h3>}
+          <FontAwesomeIcon role="button" icon={faCaretDown} onClick={onDislike} className="DownvoteBtn" style={user && dislikes.includes(user._id) ? {color:'var(--color-remove)'} : {color:'inherit'}} />
         </div>
         <div className='PostOpContent'>
           <div className='PostOpAuthorContainer'>
-            <img className='OpIcon' src={props.profileImage ? props.profileImage : 'https://res.cloudinary.com/dqreeripf/image/upload/v1656242180/xdqcnyg5zu0y9iijznvf.jpg'} alt='user profile' />
-            <h6> by {props.author} {props.time}</h6>
+            <img className='OpIcon' src={profileImage ? profileImage : 'https://res.cloudinary.com/dqreeripf/image/upload/v1656242180/xdqcnyg5zu0y9iijznvf.jpg'} alt='user profile' />
+            <h6> by {author} {time}</h6>
 
 
             <div className='more-options-btn-vertical' ref={ref}  onClick={() => setShowPostOptions(!showPostOptions)}>
@@ -84,18 +84,18 @@ function PostOp(props) {
               {
                 showPostOptions 
                 ? <div className='post-options-container' >
-                    <PostOptions isClicked = {clicked} setIsClicked = {setClicked} author = {props.author} userId = {props.id} referPost = {true} referComment = {false} referReply = {false}/>
+                    <PostOptions isClicked = {clicked} setIsClicked = {setClicked} author = {author} userId = {id} referPost = {true} referComment = {false} referReply = {false}/>
                   </div> 
                 : <></>
               }
             </div>
           </div>
           
-          <h3>{props.title}</h3>
+          <h3>{title}</h3>
           <div>
             {
               !clicked
-              ? props.content 
+              ? content 
               : <div className='edit-container'>
                   <textarea 
                     autoFocus 
@@ -113,12 +113,12 @@ function PostOp(props) {
             }
           </div>
           {
-            props.images.map(imageUrl =>
+            images.map(imageUrl =>
               <img className='forum-post-img' src={imageUrl} alt='post media' />
             )
           }
           <div className='PostOpFooter'>
-            <h4><FontAwesomeIcon icon={faCommentDots} className="CommentIcon" /> {props.comments.length} Comments</h4>
+            <h4><FontAwesomeIcon icon={faCommentDots} className="CommentIcon" /> {comments.length} Comments</h4>
             
           </div>
         </div>

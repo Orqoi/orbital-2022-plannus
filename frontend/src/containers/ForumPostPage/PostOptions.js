@@ -7,7 +7,7 @@ import { banUser, reset as resetUser} from '../../features/auth/authSlice';
 import { useState} from "react";
 import '../../assets/ForumApp.css';
 
-function PostOptions(props) {
+function PostOptions({referPost, referComment, author, setIsClicked, isClicked, id, commentId, commentMaker, replyId, replyMaker}) {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { user } = useSelector((state) => state.auth)
@@ -55,23 +55,23 @@ function PostOptions(props) {
     }
     return ( 
         <>
-            {props.referPost ? !user ? <span onClick={() => navigate('/report')}>
+            {referPost ? !user ? <span onClick={() => navigate('/report')}>
                                             <FontAwesomeIcon className="reportIcon" icon={faFlag} />
                                             Report
                                           </span> : 
-                      user.name === props.author
+                      user.name === author
                       ? <>
                           <span onClick = {() => deleteUserPosts(currentPost._id)}>
                             <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} />
                             Delete
                           </span>
                           
-                          <span onClick = {() => props.setIsClicked(!props.isClicked)}>
+                          <span onClick = {() => setIsClicked(!isClicked)}>
                             <FontAwesomeIcon className="editIcon" icon={faPenToSquare}  />
                             Edit
                           </span>
                         </>
-                      : user.moderator ?  <><span onClick={() => banThreadUser(props.id)}>
+                      : user.moderator ?  <><span onClick={() => banThreadUser(id)}>
                                             <FontAwesomeIcon className="banIcon" icon={faBan} />
                                             Ban
                                           </span>
@@ -90,28 +90,28 @@ function PostOptions(props) {
                                             <FontAwesomeIcon className="reportIcon" icon={faFlag} />
                                             Report
                                           </span>
-            : props.referComment ? !user ? <span onClick={() => navigate('/report')}>
+            : referComment ? !user ? <span onClick={() => navigate('/report')}>
                                             <FontAwesomeIcon className="reportIcon" icon={faFlag} />
                                             Report
                                           </span>
                                    : 
-                      user.name === props.author
+                      user.name === author
                       ? <>
-                          <span onClick={() => deleteUserComment(props.commentId)}>
+                          <span onClick={() => deleteUserComment(commentId)}>
                             <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} />
                             Delete
                           </span>
                           
-                          <span onClick = {() => props.setIsClicked(!props.isClicked)}>
+                          <span onClick = {() => setIsClicked(!isClicked)}>
                             <FontAwesomeIcon className="editIcon" icon={faPenToSquare}  /> 
                             Edit
                           </span>
                         </>
-                      :  user.moderator ? <><span onClick={() => banCommentUser(props.commentMaker)}>
+                      :  user.moderator ? <><span onClick={() => banCommentUser(commentMaker)}>
                                             <FontAwesomeIcon className="banIcon" icon={faBan} />
                                             Ban
                                           </span>
-                                          <span onClick={() => deleteUserComment(props.commentId)}>
+                                          <span onClick={() => deleteUserComment(commentId)}>
                                             <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} />
                                             Delete
                                           </span></>
@@ -123,24 +123,24 @@ function PostOptions(props) {
                                           <FontAwesomeIcon className="reportIcon" icon={faFlag} />
                                           Report
                                          </span>: 
-                      user.name === props.author
+                      user.name === author
                       ? <>
-                          <span onClick={()=>deleteUserReply({replyId: props.replyId, commentId: props.commentId})}>
+                          <span onClick={()=>deleteUserReply({replyId: replyId, commentId: commentId})}>
                             <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} />
                             Delete
                           </span>
                           
-                          <span onClick = {() => props.setIsClicked(!props.isClicked)}>
+                          <span onClick = {() => setIsClicked(!isClicked)}>
                         
                             <FontAwesomeIcon className="editIcon" icon={faPenToSquare}  />
                             Edit
                           </span>
                         </>
-                      : user.moderator ? <><span onClick={() => banReplyUser(props.replyMaker)}>
+                      : user.moderator ? <><span onClick={() => banReplyUser(replyMaker)}>
                                           <FontAwesomeIcon className="banIcon" icon={faBan} />
                                           Ban
                                          </span>
-                                         <span onClick={()=>deleteUserReply({replyId: props.replyId, commentId: props.commentId})}>
+                                         <span onClick={()=>deleteUserReply({replyId: replyId, commentId: commentId})}>
                                           <FontAwesomeIcon className="deleteIcon" icon={faTrashCan} />
                                           Delete
                                         </span> </>

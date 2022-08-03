@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { reset, addComment, addReply } from '../../features/posts/postSlice';
 
 
-function PostComment(props) {
+function PostComment({updateCommenting, reply, commentAuthor, commentId}) {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
 
@@ -18,14 +18,14 @@ function PostComment(props) {
         toast.error("You have not verified your email")
       }
       // close comment window after submit, if it is a reply
-      if (props.updateCommenting && props.reply) {
+      if (updateCommenting && reply) {
         const replyData = {
-          replyText: "@" + props.commentAuthor + " " + commentText,
-          commentId: props.commentId,
+          replyText: "@" + commentAuthor + " " + commentText,
+          commentId: commentId,
         }
         
         dispatch(addReply(replyData)).then(() => dispatch(reset()))
-        props.updateCommenting();
+        updateCommenting();
       } else {
         dispatch(addComment(commentText)).then(() => dispatch(reset()))
       }
@@ -45,11 +45,11 @@ function PostComment(props) {
     <form className="PostComment">
       {user
       ? <>
-          <h6>{props.reply ? 'Replying to ' + props.commentAuthor : 'Commenting'} as {user.name}</h6>
+          <h6>{reply ? 'Replying to ' + commentAuthor : 'Commenting'} as {user.name}</h6>
           <textarea id='text' onChange={onChange} cols="30" rows="5" placeholder='What are your thoughts?'></textarea>
-          <input onClick={onClickAddComment} value={props.reply ? 'Post Reply' : 'Post Comment'} required type="submit" />
+          <input onClick={onClickAddComment} value={reply ? 'Post Reply' : 'Post Comment'} required type="submit" />
         </>
-      : <h3>You are not logged in. <Link to='/login'>Login</Link> to {props.reply ? 'reply' : 'comment'}.</h3>
+      : <h3>You are not logged in. <Link to='/login'>Login</Link> to {reply ? 'reply' : 'comment'}.</h3>
       }
     </form>
     

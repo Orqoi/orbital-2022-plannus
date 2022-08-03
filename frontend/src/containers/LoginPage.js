@@ -3,9 +3,9 @@ import {useSelector, useDispatch} from 'react-redux';
 import {Link, useNavigate} from 'react-router-dom';
 import {toast} from 'react-toastify';
 import {login, reset} from "../features/auth/authSlice";
-import Spinner from '../components/Spinner';
 import '../assets/Login.css';
 import teamLogo from '../assets/PlanNUS.png';
+import LoadingIcons from 'react-loading-icons';
 
 
 
@@ -57,7 +57,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   if(isLoading) {
-      return <Spinner />
+      return <LoadingIcons.ThreeDots fill="#000000" />
   }
 
 

@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 
 
-function PlannerPage(props) {
+function PlannerPage({darkMode}) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const topLevelAction = () => dispatch => {
@@ -51,7 +51,7 @@ function PlannerPage(props) {
         ? <RequirementsApp 
             requirementsActive={requirementsActive} setRequirementsActive={setRequirementsActive} /> 
         : <PlannerApp  
-              darkMode={props.darkMode} requirementsActive={requirementsActive} setRequirementsActive={setRequirementsActive} userPlanner={user ? user.planner : []} 
+              darkMode={darkMode} requirementsActive={requirementsActive} setRequirementsActive={setRequirementsActive} userPlanner={user ? user.planner : []} 
          />}
     </div>
   );

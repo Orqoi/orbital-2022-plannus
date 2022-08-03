@@ -9,7 +9,7 @@ import { useDispatch} from 'react-redux';
 
 
 
-function SearchOverlay(props) {
+function SearchOverlay({semesterId, semesterTitle, setSearching, searching}) {
      
       // Random color function, purely for development
 
@@ -61,12 +61,12 @@ function SearchOverlay(props) {
 
         const addModuleData = {
           module: moduleWithColor,
-          semesterId: props.semesterId
+          semesterId: semesterId
         }
 
         dispatch(addModule(addModuleData)).then(()=> dispatch(updateUserPlanner())).then(() => dispatch(checkGraduation())).then(() => dispatch(topLevelAction()))
         // the item selected
-        props.setSearching(!props.searching);
+        setSearching(!searching);
       }
     
       const handleOnFocus = () => {
@@ -84,7 +84,7 @@ function SearchOverlay(props) {
   return (
     <div className="SearchOverlay">
         <div className='close-container'>
-            <FontAwesomeIcon icon={faXmark} className="close-button" onClick={() => props.setSearching(!props.searching)}/>
+            <FontAwesomeIcon icon={faXmark} className="close-button" onClick={() => setSearching(!searching)}/>
         </div>
         
         <div className='search-container'>
@@ -104,7 +104,7 @@ function SearchOverlay(props) {
             fuseOptions={{ keys: ["moduleCode"] }}
             resultStringKeyName="moduleCode"
             formatResult={formatResult}
-            placeholder={"Add a module to " + props.semesterTitle + " by module code"}
+            placeholder={"Add a module to " + semesterTitle + " by module code"}
           />
         </div>
     </div>

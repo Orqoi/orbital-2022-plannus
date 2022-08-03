@@ -5,11 +5,11 @@ import PostNew from './PostNew';
 import { useEffect, useState } from "react";
 import Moment from 'react-moment';
 import { useDispatch, useSelector} from 'react-redux'
-import Spinner from '../../components/Spinner';
 import {getSpecificPost, reset }from "../../features/posts/postSlice";
 import { useParams } from 'react-router-dom';
+import LoadingIcons from 'react-loading-icons';
 
-function ForumPostPage(props) {
+function ForumPostPage() {
   const params = useParams();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -41,7 +41,7 @@ function ForumPostPage(props) {
             }
             
           </div>
-        : <Spinner />
+        :  <LoadingIcons.ThreeDots fill="#000000" />
       }
     </div>
   );
